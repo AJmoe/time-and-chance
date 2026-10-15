@@ -1,0 +1,5 @@
+# Crawling is allowed. The Render preview is kept out of search results by its
+# X-Robots-Tag: noindex header (render.yaml), which crawlers can only see if not blocked here.
+# TODO-LAUNCH: add "Sitemap: https://DOMAIN/sitemap.xml" once the domain is confirmed.
+User-agent: *
+Allow: /

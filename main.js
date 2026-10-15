@@ -1,4 +1,4 @@
-document.documentElement.classList.add('js');
+// The 'js' class is set by an inline script in <head> so reveal styles apply before first paint.
 
 // Mobile menu
 const toggle = document.querySelector('.nav-toggle');
@@ -10,12 +10,21 @@ function setMenu(open) {
   nav.classList.toggle('open', open);
 }
 
-toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+const menuOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+toggle.addEventListener('click', () => setMenu(!menuOpen()));
 nav.addEventListener('click', (e) => {
   if (e.target.closest('a')) setMenu(false);
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') setMenu(false);
+  if (e.key === 'Escape' && menuOpen()) {
+    setMenu(false);
+    toggle.focus();
+  }
+});
+// Close the menu when a tap lands outside the header.
+document.addEventListener('click', (e) => {
+  if (menuOpen() && !e.target.closest('.site-header')) setMenu(false);
 });
 
 // Header border once the page scrolls
@@ -43,35 +52,77 @@ if ('IntersectionObserver' in window) {
   reveals.forEach((el) => el.classList.add('in'));
 }
 
-// Contact form: no backend, so build an email in the visitor's mail app
+// Contact form: no backend, so build an email in the visitor's mail app.
+const EMAIL = 'timeandchance101@gmail.com';
 const form = document.getElementById('contact-form');
+const status = form.querySelector('.form-status');
+const messages = {
+  name: 'Please enter your name.',
+  message: 'Please tell us a little about what you need.',
+};
+
+// Validation is handled here so errors are shown as text, not only a red border.
+form.noValidate = true;
+
+function setError(input, text) {
+  const field = input.closest('.field');
+  const error = field.querySelector('.field-error');
+  field.classList.toggle('invalid', Boolean(text));
+  if (text) input.setAttribute('aria-invalid', 'true');
+  else input.removeAttribute('aria-invalid');
+  if (error) error.textContent = text;
+}
+
+form.querySelectorAll('[required]').forEach((input) => {
+  input.addEventListener('input', () => {
+    if (input.value.trim()) setError(input, '');
+  });
+});
+
+// Kept separate so tests can stub it; mail apps are opened by navigating to the mailto URL.
+window.openMail = window.openMail || ((url) => (window.location.href = url));
+
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  let ok = true;
+  let firstInvalid = null;
   form.querySelectorAll('[required]').forEach((input) => {
     const empty = !input.value.trim();
-    input.closest('.field').classList.toggle('invalid', empty);
-    if (empty && ok) {
-      input.focus();
-      ok = false;
-    }
+    setError(input, empty ? messages[input.name] : '');
+    if (empty && !firstInvalid) firstInvalid = input;
   });
-  if (!ok) return;
+  if (firstInvalid) {
+    status.hidden = true;
+    firstInvalid.focus();
+    return;
+  }
 
   const data = new FormData(form);
-  const subject = `Enquiry: ${data.get('interest')} (${data.get('name')})`;
-  const body = [
-    `Name: ${data.get('name')}`,
-    data.get('org') ? `Business / organisation: ${data.get('org')}` : '',
-    `Interested in: ${data.get('interest')}`,
-    '',
-    data.get('message'),
-  ]
-    .filter((line, i) => line !== '' || i === 3)
-    .join('\n');
+  const name = data.get('name').trim();
+  const org = data.get('org').trim();
+  const subject = `Enquiry: ${data.get('interest')} (${name})`;
+  const lines = [`Name: ${name}`];
+  if (org) lines.push(`Business / organisation: ${org}`);
+  lines.push(`Interested in: ${data.get('interest')}`, '', data.get('message').trim());
 
-  window.location.href =
-    'mailto:timeandchance101@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  window.openMail(
+    `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`,
+  );
+
+  // Some devices have no mail app set up, so always show another way to reach us.
+  status.hidden = false;
+  status.innerHTML = '';
+  status.append(
+    'Your email app should open with the message ready to send. If nothing opened, email ',
+    Object.assign(document.createElement('a'), { href: `mailto:${EMAIL}`, textContent: EMAIL }),
+    ' or ',
+    Object.assign(document.createElement('a'), {
+      href: 'https://wa.me/26771542011',
+      textContent: 'message us on WhatsApp',
+      target: '_blank',
+      rel: 'noopener',
+    }),
+    '.',
+  );
 });
 
 document.getElementById('year').textContent = new Date().getFullYear();

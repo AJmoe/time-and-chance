@@ -2,7 +2,9 @@
   --navy: #001838;
   --navy-soft: #0d2a52;
   --gold: #caa76c;
-  --gold-deep: #9a7a43; /* gold dark enough for small text on white */
+  --gold-deep: #85683a; /* gold dark enough for small text on white and paper (AA) */
+  --error: #f2a397; /* readable on the navy form panel */
+  --whatsapp: #177d44; /* WhatsApp green darkened so white text passes AA */
   --white: #ffffff;
   --paper: #faf8f4;
   --ink: #001838;
@@ -66,6 +68,10 @@ h3 {
 
 p {
   margin: 0 0 1em;
+}
+
+strong {
+  font-weight: 600;
 }
 
 .container {
@@ -282,7 +288,8 @@ p {
   align-items: center;
 }
 .hero-photo {
-  margin: 0;
+  /* right/bottom margin leaves room for the offset gold frame */
+  margin: 0 18px 18px 0;
   position: relative;
 }
 .hero-photo::before {
@@ -526,10 +533,8 @@ p {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 32px;
-  counter-reset: none;
 }
 .step {
-  position: relative;
   padding-top: 24px;
   border-top: 1px solid var(--navy);
 }
@@ -720,9 +725,30 @@ p {
   outline: none;
   border-color: var(--gold);
 }
+.req {
+  color: var(--white);
+}
 .field.invalid input,
 .field.invalid textarea {
-  border-color: #e98b7d;
+  border-color: var(--error);
+}
+.field-error {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: var(--error);
+}
+.field-error:empty {
+  display: none;
+}
+.form-status {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  border-left: 2px solid var(--gold);
+  background: rgba(255, 255, 255, 0.05);
+}
+.form-status a {
+  color: var(--gold);
 }
 .contact-form .btn {
   width: 100%;
@@ -751,9 +777,63 @@ p {
   color: var(--gold);
   letter-spacing: 0.15em;
 }
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 24px;
+  font-size: 0.85rem;
+}
+.footer-links a {
+  display: inline-block;
+  padding: 6px 0;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+.footer-links a:hover {
+  color: var(--gold);
+}
 .copy {
   font-size: 0.78rem;
   margin: 0;
+}
+
+/* ---------- 404 ---------- */
+
+.not-found {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - var(--header-h) - 260px);
+  display: flex;
+  align-items: center;
+  padding: clamp(64px, 10vw, 120px) 0;
+}
+.not-found h1 {
+  font-size: clamp(2.2rem, 5.6vw, 4rem);
+}
+.not-found .hero-actions {
+  margin-bottom: 40px;
+}
+.not-found-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+}
+.not-found-links a {
+  display: inline-block;
+  padding: 6px 0;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 6px;
 }
 
 /* ---------- WhatsApp button ---------- */
@@ -768,7 +848,7 @@ p {
   gap: 10px;
   height: 56px;
   padding: 0 14px;
-  background: #25d366;
+  background: var(--whatsapp);
   color: var(--white);
   border-radius: 999px;
   box-shadow: 0 6px 20px rgba(0, 24, 56, 0.25);
@@ -809,6 +889,10 @@ p {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .card:hover,
+  .whatsapp-fab:hover {
+    transform: none;
   }
 }
 
@@ -860,7 +944,6 @@ p {
   }
   .hero-photo {
     max-width: 420px;
-    margin-right: 18px;
   }
   .gallery {
     grid-template-columns: 1fr 1fr;
@@ -902,7 +985,17 @@ p {
     padding: 0;
     justify-content: center;
   }
+  /* Icon-only on phones; the label stays available to screen readers. */
   .whatsapp-label {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  /* Keep the floating button clear of the last line of the footer. */
+  .site-footer {
+    padding-bottom: 96px;
   }
 }
