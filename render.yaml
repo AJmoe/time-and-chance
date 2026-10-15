@@ -1,0 +1,14 @@
+# Render Blueprint: free static site, used as a client preview.
+# The X-Robots-Tag header keeps the preview out of search engines; remove it at launch.
+services:
+  - type: web
+    name: time-and-chance
+    runtime: static
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: X-Robots-Tag
+        value: noindex, nofollow
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800

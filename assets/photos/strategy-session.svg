@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d2a52"/><stop offset="1" stop-color="#001838"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/>
+<rect x="20.0" y="20.0" width="760.0" height="560.0" fill="none" stroke="#caa76c" stroke-opacity=".35" stroke-width="1.5"/>
+<g transform="translate(400.0 260.0) scale(1.0)" fill="#caa76c" stroke-linejoin="round">
+<path d="M-16-30H16L0-4Z"/><path d="M0 2 22 28H-22Z"/><path d="M0-4V2" stroke="#caa76c" stroke-width="2"/>
+<path d="M0-2V24" stroke="#caa76c" stroke-width="2" stroke-dasharray="2 3" fill="none"/>
+</g>
+<text x="400.0" y="340.0" text-anchor="middle" fill="#ffffff" font-family="Georgia, serif" font-size="26.0" letter-spacing="3.0">STRATEGY SESSION</text>
+<text x="400.0" y="372.0" text-anchor="middle" fill="#caa76c" font-family="Segoe UI, Arial, sans-serif" font-size="14.0" letter-spacing="2.0">CLIENT MEETING OR WORKSHOP</text>
+<text x="400.0" y="556.0" text-anchor="middle" fill="#ffffff" fill-opacity=".45" font-family="Segoe UI, Arial, sans-serif" font-size="12.0" letter-spacing="3.0">PLACEHOLDER · 800×600</text>
+</svg>
